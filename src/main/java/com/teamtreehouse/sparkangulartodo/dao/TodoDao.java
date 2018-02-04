@@ -8,9 +8,9 @@ import java.util.List;
 public interface TodoDao {
   void add(Todo todo) throws DaoException;
 
-  List<Todo> findAll();
+  List<Todo> findAll() throws DaoException;
 
-  Todo findById(int id);
+  Todo findById(int id) throws DaoException;
 
   void update(Todo todo) throws DaoException;
 

@@ -5,6 +5,7 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.staticFileLocation;
 
+import com.teamtreehouse.sparkangulartodo.dao.Sql2oTodoDao;
 import com.teamtreehouse.sparkangulartodo.dao.TodoDao;
 import org.sql2o.Sql2o;
 
