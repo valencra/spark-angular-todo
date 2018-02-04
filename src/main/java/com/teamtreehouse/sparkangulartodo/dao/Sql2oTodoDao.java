@@ -17,27 +17,13 @@ public class Sql2oTodoDao implements TodoDao {
   }
 
   @Override
-  public void add(Todo todo) throws DaoException {
-    String sql = "INSERT INTO todos(name, completed) VALUES (:name, :completed)";
-    try (Connection connection = sql2o.open()) {
-      int id = (int) connection.createQuery(sql)
-          .bind(todo)
-          .executeUpdate()
-          .getKey();
-      todo.setId(id);
-    } catch (Sql2oException exception) {
-      throw new DaoException(exception, "Encountered a problem while adding todo!");
-    }
-  }
-
-  @Override
   public List<Todo> findAll() throws DaoException {
     String queryText = "SELECT * FROM todos";
     try(Connection connection = sql2o.open()) {
       return connection.createQuery(queryText)
           .executeAndFetch(Todo.class);
     } catch (Sql2oException exception) {
-      throw new DaoException(exception, "Encountered a problem while getting todos!");
+      throw new DaoException(exception, "Unable to find todos");
     }
   }
 
@@ -49,7 +35,21 @@ public class Sql2oTodoDao implements TodoDao {
           .addParameter("id", id)
           .executeAndFetchFirst(Todo.class);
     } catch (Sql2oException exception) {
-      throw new DaoException(exception, "Encountered a problem while getting todo by ID!");
+      throw new DaoException(exception, "Unable to find todo with ID " + id);
+    }
+  }
+
+  @Override
+  public void add(Todo todo) throws DaoException {
+    String sql = "INSERT INTO todos(name, completed) VALUES (:name, :completed)";
+    try (Connection connection = sql2o.open()) {
+      int id = (int) connection.createQuery(sql)
+          .bind(todo)
+          .executeUpdate()
+          .getKey();
+      todo.setId(id);
+    } catch (Sql2oException exception) {
+      throw new DaoException(exception, "Unable to add todo");
     }
   }
 
@@ -63,7 +63,7 @@ public class Sql2oTodoDao implements TodoDao {
           .addParameter("id", todo.getId())
           .executeUpdate();
     } catch (Sql2oException exception) {
-      throw new DaoException(exception, "Encountered a problem while updating todo!");
+      throw new DaoException(exception, "Unable to update todo");
     }
   }
 
@@ -75,7 +75,7 @@ public class Sql2oTodoDao implements TodoDao {
           .addParameter("id", id)
           .executeUpdate();
     } catch (Sql2oException exception) {
-      throw new DaoException(exception, "Encountered a problem while deleting todo!");
+      throw new DaoException(exception, "Unable to delete todo");
     }
   }
 }
